@@ -1,7 +1,11 @@
 package gui.basePage;
 
-import org.openqa.selenium.*;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.Iterator;
 import java.util.Set;
@@ -32,10 +36,14 @@ public class BaseClass {
     }
 
     public void clickOnWebElement(WebElement element) {
+        waitForElementVisible(element);
+        highlightWebElement(element);
         element.click();
     }
 
     public void clickUsingJavaScriptExecutor(WebElement element) {
+        waitForElementVisible(element);
+        highlightWebElement(element);
         JavascriptExecutor javascriptExcecutor = (JavascriptExecutor) driver;
         javascriptExcecutor.executeScript("arguments[0].click();", element);
     }
@@ -53,10 +61,14 @@ public class BaseClass {
     }
 
     public void type(WebElement element, String value) {
+        waitForElementVisible(element);
+        highlightWebElement(element);
         element.sendKeys(value);
     }
 
     public String getElementValue(WebElement element) {
+        waitForElementVisible(element);
+        highlightWebElement(element);
         return element.getText();
     }
 
@@ -65,10 +77,13 @@ public class BaseClass {
     }
 
     public void clear(WebElement element){
+        waitForElementVisible(element);
+        highlightWebElement(element);
         element.clear();
     }
 
     public void scrollInToElement(WebElement element){
+        waitForElementVisible(element);
         ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", element);
     }
 
@@ -76,5 +91,15 @@ public class BaseClass {
         Pattern pattern = Pattern.compile(regularExpression);//. represents single character
         Matcher matcher = pattern.matcher(stringValue);
         return matcher.matches();
+    }
+
+    public void highlightWebElement(WebElement element){
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        js.executeScript("arguments[0].setAttribute('style', 'background: yellow; border: 2px solid red;');", element);
+    }
+
+    public void waitForElementVisible(WebElement element){
+        WebDriverWait wait = new WebDriverWait(driver,30);
+        wait.until(ExpectedConditions.visibilityOf(element));
     }
 }
